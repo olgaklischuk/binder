@@ -1,19 +1,17 @@
-.libPaths("C:/Users/1/Documents/R/win-library/4.0")
 library(gEcon)
 library(gEcon.iosam)
 library(gEcon.estimation)
 
 # copy the example to the current working directory####
-if(Sys.info()[4]=="MacBook-Air-Ulia.local"){comp="mac"}else{comp="asus"}
-if(comp=="asus"){load(paste("C:/Users/1/OneDrive/DSGE main/Result/","dsge.",d,".RData",sep=""))}else{load(paste("~/OneDrive/","DSGE main/Result/","dsge.",d,".RData",sep=""))}
-if(comp=="asus"){disk="OneDrive"
-path<-ifelse(disk=="OneDrive","C:/Users/1/OneDrive/DSGE main/dsge_model.gcn","J:/Model-листопад 2017/Equilibrium model/dsge_model.gcn")
+
+if(comp!=="asus"){disk="Github"
+path<-ifelse(disk=="Github","https://github.com/OlgaKlschuk/My-first-binder/dsge_model.gcn","C:/Users/1/OneDrive/DSGE main/dsge_model.gcn")
 info__ <- c("dsge_model", path, "2018-05-07 12:36:19")}else{disk="OneDrive"
 path<-ifelse(disk=="OneDrive","~/OneDrive/Computer/DSGE main/dsge_model.gcn","~/OneDrive/Computer/DSGE main/dsge_model.gcn")
 info__ <- c("dsge_model", path, "2018-05-07 12:36:19")}
-if(disk=="OneDrive"){path<-c("C:/Users/1/OneDrive/DSGE main")}else{path<-"I:/9.5.Central Banks/case 2/simulations/examples"}
-gsn<-ifelse(disk=="OneDrive",path,
-                    "I:/9.5.Central Banks/case 2/simulations/examples")
+if(disk!=="OneDrive"){path<-c("https://github.com/OlgaKlschuk/My-first-binder/dsge_model.gcn")}else{path<-"I:/9.5.Central Banks/case 2/simulations/examples"}
+gsn<-ifelse(disk!=="OneDrive",path,
+                    "~/OneDrive/Computer/DSGE main/dsge_model.gcn")
 file.copy(from = file.path(gsn, "dsge_model.gcn"), to = getwd())
 setwd("C:/Users/1/OneDrive/DSGE main")
 
