@@ -1,0 +1,122 @@
+# ############################################################################
+# This file is a part of gEcon.estimation                                    #
+#                                                                            #
+# (c) Chancellery of the Prime Minister of the Republic of Poland 2012-2015  #
+# (c) Grzegorz Klima, Karol Podemski 2015-2016                               #
+# License terms can be found in the file 'LICENCE'                           #
+#                                                                            #
+# Authors: Karol Podemski                                                    #
+# ############################################################################
+# RBC model with variable capacity utilization and government                                                                 
+# ############################################################################
+
+
+options
+{
+    output logfile = TRUE;
+    output LaTeX = TRUE;
+    verbose = TRUE;
+    output R long = TRUE;
+}
+
+tryreduce
+{
+    H_d[], PI[], lambda_U[], lambda_c[], T[], P[];
+};
+
+block CONSUMER
+{
+    definitions
+    {
+        u[] = log(C[]) + psi * log(1 - H[]);
+    }
+    controls
+    {
+        C[], H[];
+    }
+    objective
+    {
+        U[] = u[] + beta * E[][U[1]]    : lambda_U[];
+    }
+    constraints
+    {
+         C[] + T[] = W[] * H[] + PI[]       : lambda_c[];
+    }
+    calibration
+    {
+        beta = 0.99;
+        psi = 1.75;
+    }
+}
+
+
+block FIRM
+{
+    controls
+    {
+        K[], H_d[], Y[], I[], PI[], CapUt[];
+    };
+    objective
+    {
+        SPI[] = PI[] + E[][lambda_U[1] * lambda_c[1] / lambda_c[] * SPI[1]];
+    };
+    constraints
+    {
+        Y[] = exp(Z[]) ^ (1 - alpha) * (K[-1] * CapUt[])^alpha * (H_d[] )^(1 - alpha);
+        K[] = (1 - delta * CapUt[] ^ omega) * K[-1]  + I[];
+        PI[] = P[] * Y[] - H_d[] * W[] - I[];
+    };
+    identities
+    {
+        K_ut[] = CapUt[] * K[-1];
+    };
+    calibration
+    {
+        alpha = 0.33;
+        omega = 1.45;
+        delta = 0.0265;
+    }
+}
+
+
+block EQUILIBRIUM
+{
+    identities
+    {
+        P[] = 1;
+        H[] = H_d[];
+    };
+};
+
+block GOVERNMENT
+{
+    identities
+    {
+        T[] = G[];
+        G[] = phi_G * G[-1] + epsilon_G[];
+    };
+    shocks
+    {
+        epsilon_G[];
+    };
+    calibration
+    {
+        phi_G = 0.9;
+    };
+};
+
+block EXOG 
+{
+    identities
+    {    
+        Z[] = phi_Z * Z[-1]  + epsilon_Z[];
+    }
+    shocks
+    {           
+        epsilon_Z[];
+    }
+    calibration
+    {
+        phi_Z = 0.9;
+    }
+};
