@@ -20,5 +20,5 @@ library(GGally)
 #plots
 advanced_countries<-unique(covid19_df[,"contries"])
 covid19_advanced_co_df<-covid19_df%>%
-filter(country=advanced_countries))
-plot<-ggplot(data=covid19_df, aes(date,cases))
+filter(location==advanced_countries))
+plot<-ggplot(data=covid19_advanced_co_df, aes(date,value))
